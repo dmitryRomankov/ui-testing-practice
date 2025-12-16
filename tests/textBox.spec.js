@@ -19,6 +19,7 @@ test('Fill text Box scenario', async ({ textBoxPage, storedUser }) => {
 test('Negative: Invalid email format', async ({ textBoxPage, storedUser }) => {
   const { user } = storedUser;
   user.email = 'invalid-email';
+
   await test.step('Fill text box with invalid data', async () => {
     await textBoxPage.fillTextBoxFields(user);
   });
