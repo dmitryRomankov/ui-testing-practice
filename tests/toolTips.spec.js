@@ -2,13 +2,14 @@ import { test } from './fixtures/toolTipsFixtures.js';
 import { expect } from '@playwright/test';
 
 test.describe('Tool Tips Page Tests @toolTips', () => {
-  test('Check tooltip on hover button @positive', async ({ toolTipsPage }, testInfo) => {
+  test('Check tooltip on hover button @positive', async ({ toolTipsPage, page }, testInfo) => {
     // Skip in Firefox due to tooltip rendering differences
     if (testInfo.project.name === 'firefox') {
       test.skip();
     }
     await test.step('Hover over button', async () => {
       await toolTipsPage.hoverOverButton();
+      await page.waitForTimeout(500);
     });
 
     await test.step('Verify tooltip text', async () => {
@@ -17,12 +18,13 @@ test.describe('Tool Tips Page Tests @toolTips', () => {
     });
   });
 
-  test('Check tooltip on hover text field @positive', async ({ toolTipsPage }, testInfo) => {
+  test('Check tooltip on hover text field @positive', async ({ toolTipsPage, page }, testInfo) => {
     if (testInfo.project.name === 'firefox') {
       test.skip();
     }
     await test.step('Hover over text field', async () => {
       await toolTipsPage.hoverOverTextField();
+      await page.waitForTimeout(500);
     });
 
     await test.step('Verify tooltip text', async () => {
@@ -38,6 +40,7 @@ test.describe('Tool Tips Page Tests @toolTips', () => {
 
     await test.step('Hover over Contrary link', async () => {
       await toolTipsPage.hoverOverContraryLink();
+      await page.waitForTimeout(500);
     });
 
     await test.step('Verify tooltip text', async () => {
@@ -53,6 +56,7 @@ test.describe('Tool Tips Page Tests @toolTips', () => {
 
     await test.step('Hover over section link', async () => {
       await toolTipsPage.hoverOverSectionLink();
+      await page.waitForTimeout(500);
     });
 
     await test.step('Verify tooltip text', async () => {
