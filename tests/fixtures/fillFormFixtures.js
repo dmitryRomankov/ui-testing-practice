@@ -8,7 +8,6 @@ export const test = base.extend({
     await AdBlock.blockAds(page);
     await page.goto('https://demoqa.com/text-box', { waitUntil: 'domcontentloaded' });
     const textBox = new TextBoxPage(page);
-
     await use(textBox);
   },
 

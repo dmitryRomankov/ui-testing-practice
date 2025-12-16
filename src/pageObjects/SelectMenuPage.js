@@ -1,7 +1,7 @@
 import { BasePage } from './index.js';
 import { expect } from '@playwright/test';
 
-export default class SelectMenuPage extends BasePage {
+class SelectMenuPage extends BasePage {
   constructor(page) {
     super(page);
     this.page = page;
@@ -75,3 +75,5 @@ export default class SelectMenuPage extends BasePage {
     return await this.oldStyleSelect.inputValue();
   }
 }
+
+export default SelectMenuPage;

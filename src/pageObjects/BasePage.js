@@ -1,4 +1,4 @@
-export default class BasePage {
+class BasePage {
   constructor(page) {
     this.page = page;
   }
@@ -36,3 +36,5 @@ export default class BasePage {
     return await locator.isVisible();
   }
 }
+
+export default BasePage;

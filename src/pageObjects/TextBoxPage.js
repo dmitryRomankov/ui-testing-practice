@@ -1,7 +1,7 @@
 import { BasePage } from './index.js';
 import { expect } from '@playwright/test';
 
-export default class TextBoxPage extends BasePage {
+class TextBoxPage extends BasePage {
   constructor(page) {
     super(page);
     this.fullNameInput = page.locator('#userName');
@@ -42,3 +42,5 @@ export default class TextBoxPage extends BasePage {
     return await fieldLocator.getAttribute('class').then(classes => classes.includes('field-error'));
   }
 }
+
+export default TextBoxPage;

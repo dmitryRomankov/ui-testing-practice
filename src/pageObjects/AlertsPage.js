@@ -1,6 +1,6 @@
 import { BasePage } from './index.js';
 
-export default class AlertsPage extends BasePage {
+class AlertsPage extends BasePage {
   constructor(page) {
     super(page);
     this.page = page;
@@ -17,3 +17,5 @@ export default class AlertsPage extends BasePage {
     await button.click();
   }
 }
+
+export default AlertsPage;

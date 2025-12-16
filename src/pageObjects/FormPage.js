@@ -1,7 +1,7 @@
 import { BasePage } from './index.js';
 import { expect } from '@playwright/test';
 
-export default class FormPage extends BasePage {
+class FormPage extends BasePage {
   constructor(page) {
     super(page);
     this.page = page;
@@ -168,3 +168,5 @@ export default class FormPage extends BasePage {
     return await fieldLocator.evaluate(el => window.getComputedStyle(el).borderColor);
   }
 }
+
+export default FormPage;

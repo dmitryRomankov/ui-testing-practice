@@ -1,6 +1,6 @@
 import { BasePage } from './index.js';
 
-export default class ToolTipsPage extends BasePage {
+class ToolTipsPage extends BasePage {
   constructor(page) {
     super(page);
     this.page = page;
@@ -46,3 +46,5 @@ export default class ToolTipsPage extends BasePage {
     return await this.tooltip.isVisible();
   }
 }
+
+export default ToolTipsPage;
