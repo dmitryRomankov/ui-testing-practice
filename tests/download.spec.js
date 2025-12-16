@@ -7,6 +7,7 @@ test.beforeEach(async ({ page }) => {
   await AdBlock.blockAds(page);
   await page.goto('https://demoqa.com/upload-download', { waitUntil: 'domcontentloaded' });
 });
+
 test.describe('Upload file scenarios', () => {
   test('Upload file', async ({ page }) => {
     const attachment = new Attachment();

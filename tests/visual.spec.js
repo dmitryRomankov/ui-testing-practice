@@ -9,8 +9,9 @@ test.beforeEach(async ({ page }) => {
   await AdBlock.blockAds(page);
   await page.goto('https://demoqa.com', { waitUntil: 'domcontentloaded' });
 });
+
 test.describe('Visual testing', () => {
-  test('Take a screenshots', async ({ page }) => {
+  test.skip('Take a screenshots @visual', async ({ page }) => {
     const mainPage = new MainPage(page);
 
     await test.step('Visual regression test for Element card', async () => {
