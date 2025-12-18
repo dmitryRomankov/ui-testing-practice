@@ -1,6 +1,6 @@
 import BasePage from './BasePage.js';
 
-export default class MainPage extends BasePage {
+class MainPage extends BasePage {
   constructor(page) {
     super(page);
     this.headerLocator = page.locator('header');
@@ -73,3 +73,5 @@ export default class MainPage extends BasePage {
     return this.multiselectField.inputValue().then(value => value.includes(expectedValue));
   }
 }
+
+export default MainPage;

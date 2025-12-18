@@ -1,8 +1,10 @@
 // @ts-check
 import { defineConfig, devices } from '@playwright/test';
 
-const viewPortWidth = process.env.VIEWPORT_WIDTH ? parseInt(process.env.VIEWPORT_WIDTH, 10) : 1280;
-const viewPortHeight = process.env.VIEWPORT_HEIGHT ? parseInt(process.env.VIEWPORT_HEIGHT, 10) : 720;
+const viewPortWidth = process.env.VIEWPORT_WIDTH ? parseInt(process.env.VIEWPORT_WIDTH, 10) : 1920;
+const viewPortHeight = process.env.VIEWPORT_HEIGHT ? parseInt(process.env.VIEWPORT_HEIGHT, 10) : 1080;
+const workers = process.env.WORKERS ? parseInt(process.env.WORKERS, 10) : process.env.CI ? 2 : 4;
+const grepPattern = process.env.RUN_THIS ? new RegExp(process.env.RUN_THIS) : undefined;
 
 /**
  * Read environment variables from file.
@@ -23,29 +25,59 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   /* Retry on CI only */
   retries: process.env.CI ? 2 : 0,
-  /* Opt out of parallel tests on CI. */
-  workers: process.env.CI ? 1 : undefined,
+  /* Configure parallel workers */
+  workers: workers,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-  reporter: 'html',
+  reporter: [
+    ['html', { outputFolder: 'playwright-report', open: 'never' }],
+    ['json', { outputFile: 'test-results/results.json' }],
+    ['junit', { outputFile: 'test-results/junit.xml' }],
+    ['list'],
+  ],
+  /* Grep pattern for running specific tests */
+  grep: grepPattern,
+  /* Timeout for each test */
+  timeout: 60000,
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('')`. */
     // baseURL: 'http://localhost:3000',
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-    trace: 'on-first-retry',
+    trace: 'retain-on-failure',
+
+    /* Screenshot on failure */
+    screenshot: 'only-on-failure',
+
+    /* Video on failure */
+    video: 'retain-on-failure',
+
+    /* Action timeout */
+    actionTimeout: 15000,
+
+    /* Navigation timeout */
+    navigationTimeout: 30000,
   },
 
   /* Configure projects for major browsers */
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'], viewport: { width: viewPortWidth, height: viewPortHeight } },
+      use: {
+        ...devices['Desktop Chrome'],
+        viewport: { width: viewPortWidth, height: viewPortHeight },
+        launchOptions: {
+          args: ['--disable-web-security'],
+        },
+      },
     },
 
     {
       name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
+      use: {
+        ...devices['Desktop Firefox'],
+        viewport: { width: viewPortWidth, height: viewPortHeight },
+      },
     },
     //
     //   {

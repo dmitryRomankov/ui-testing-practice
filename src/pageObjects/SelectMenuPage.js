@@ -1,0 +1,87 @@
+import { BasePage } from './index.js';
+import { expect } from '@playwright/test';
+
+class SelectMenuPage extends BasePage {
+  constructor(page) {
+    super(page);
+    this.page = page;
+
+    // Select Value dropdown
+    this.selectValueContainer = page.locator('#withOptGroup');
+
+    // Select One dropdown
+    this.selectOneContainer = page.locator('#selectOne');
+
+    // Old Style Select Menu
+    this.oldStyleSelect = page.locator('#oldSelectMenu');
+
+    // Multiselect Dropdown
+    this.multiselectContainer = page.locator('#selectMenuContainer input').last();
+    this.multiselectInput = page.locator('#selectMenuContainer input').last();
+
+    // Standard multi select
+    this.standardMultiSelect = page.locator('#cars');
+
+    // Value locator
+    this.valueLocator = value => this.page.locator('#selectMenuContainer').locator(`div:has-text("${value}")`).first();
+  }
+
+  async selectValue(value) {
+    await this.selectValueContainer.click();
+    await this.page.locator(`div[id^="react-select-2-option"]:has-text("${value}")`).click();
+  }
+
+  async selectOne(value) {
+    await this.selectOneContainer.click();
+    await this.page.locator(`div[id^="react-select-3-option"]:has-text("${value}")`).click();
+  }
+
+  async selectOldStyleMenu(value) {
+    if (typeof value === 'number' || !isNaN(value)) {
+      await this.oldStyleSelect.selectOption({ value: value.toString() });
+    } else {
+      await this.oldStyleSelect.selectOption({ label: value });
+    }
+  }
+
+  async selectMultipleValues(values) {
+    await this.multiselectInput.scrollIntoViewIfNeeded();
+    await this.multiselectInput.click({ force: true });
+    await this.page.waitForTimeout(300);
+    for (const value of values) {
+      await this.multiselectInput.fill(value);
+      await this.page.waitForTimeout(200);
+      await this.page.locator(`div[id^="react-select-4-option"]:has-text("${value}")`).click();
+      await this.page.waitForTimeout(100);
+    }
+  }
+
+  async verifySelectValue(expectedText) {
+    const text = await this.selectValueContainer.textContent();
+    expect(text).toContain(expectedText);
+  }
+
+  async verifySelectOne(expectedText) {
+    const text = await this.selectOneContainer.textContent();
+    expect(text).toContain(expectedText);
+  }
+
+  async verifyOldStyleValue(expectedValue) {
+    const selectedValue = await this.oldStyleSelect.inputValue();
+    expect(selectedValue).toBe(expectedValue);
+  }
+
+  async verifyMultiselectValues(expectedValues) {
+    for (const value of expectedValues) {
+      // Look for the selected value badge/tag in the multiselect container
+      const valueLocator = this.valueLocator(value);
+      await expect(valueLocator).toBeVisible();
+    }
+  }
+
+  async getSelectedOldStyleValue() {
+    return await this.oldStyleSelect.inputValue();
+  }
+}
+
+export default SelectMenuPage;

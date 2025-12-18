@@ -38,7 +38,8 @@ class AdBlock {
   static async blockAds(page) {
     await page.route('**/*', route => {
       const url = route.request().url();
-      if (blockedResources.some(resource => url.includes(resource))) {
+      const isResourceIncluded = blockedResources.some(resource => url.includes(resource));
+      if (isResourceIncluded) {
         route.abort();
       } else {
         route.continue();
