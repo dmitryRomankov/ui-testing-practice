@@ -14,18 +14,11 @@ test.describe('Form Page Tests @formPage', () => {
 
     await test.step('Submit form', async () => {
       await formPage.submitForm();
-      await page.waitForTimeout(1000);
     });
 
-    await test.step('Verify modal appears with success message', async () => {
-      await expect(formPage.modal).toBeVisible();
-      await expect(formPage.modalTitle).toHaveText('Thanks for submitting the form');
-    });
-
-    await test.step('Verify submitted data contains entered values', async () => {
-      const tableText = await formPage.modalTable.textContent();
-      expect(tableText).toContain(formData.firstName);
-      expect(tableText).toContain(formData.lastName);
+    await test.step('Verify modal and submitted data', async () => {
+      await formPage.verifyModalAppears();
+      await formPage.verifySubmittedData(formData);
     });
 
     await test.step('Close modal', async () => {
@@ -97,8 +90,9 @@ test.describe('Form Page Tests @formPage', () => {
     await formPage.submitForm();
     await page.waitForTimeout(1000);
 
-    const modalVisible = await formPage.modal.isVisible().catch(() => false);
-    expect(modalVisible).toBeTruthy();
+    await formPage.verifyModalAppears();
+    await formPage.verifySubmittedData(formData);
+    await formPage.closeModal();
   });
 
   test('Fill form with multiple data sets - Dataset 2 @parameterized', async ({ formPage, page }) => {
@@ -112,7 +106,8 @@ test.describe('Form Page Tests @formPage', () => {
     await formPage.submitForm();
     await page.waitForTimeout(1000);
 
-    const modalVisible = await formPage.modal.isVisible().catch(() => false);
-    expect(modalVisible).toBeTruthy();
+    await formPage.verifyModalAppears();
+    await formPage.verifySubmittedData(formData);
+    await formPage.closeModal();
   });
 });

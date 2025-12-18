@@ -16,11 +16,14 @@ class SelectMenuPage extends BasePage {
     this.oldStyleSelect = page.locator('#oldSelectMenu');
 
     // Multiselect Dropdown
-    this.multiselectContainer = page.locator('#selectMenuContainer .css-2b097c-container').last();
+    this.multiselectContainer = page.locator('#selectMenuContainer input').last();
     this.multiselectInput = page.locator('#selectMenuContainer input').last();
 
     // Standard multi select
     this.standardMultiSelect = page.locator('#cars');
+
+    // Value locator
+    this.valueLocator = value => this.page.locator('#selectMenuContainer').locator(`div:has-text("${value}")`).first();
   }
 
   async selectValue(value) {
@@ -42,10 +45,14 @@ class SelectMenuPage extends BasePage {
   }
 
   async selectMultipleValues(values) {
-    await this.multiselectContainer.click();
+    await this.multiselectInput.scrollIntoViewIfNeeded();
+    await this.multiselectInput.click({ force: true });
+    await this.page.waitForTimeout(300);
     for (const value of values) {
       await this.multiselectInput.fill(value);
+      await this.page.waitForTimeout(200);
       await this.page.locator(`div[id^="react-select-4-option"]:has-text("${value}")`).click();
+      await this.page.waitForTimeout(100);
     }
   }
 
@@ -66,8 +73,9 @@ class SelectMenuPage extends BasePage {
 
   async verifyMultiselectValues(expectedValues) {
     for (const value of expectedValues) {
-      const multiText = await this.multiselectContainer.textContent();
-      expect(multiText).toContain(value);
+      // Look for the selected value badge/tag in the multiselect container
+      const valueLocator = this.valueLocator(value);
+      await expect(valueLocator).toBeVisible();
     }
   }
 

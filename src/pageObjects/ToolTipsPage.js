@@ -1,3 +1,4 @@
+import { time } from 'console';
 import { BasePage } from './index.js';
 
 class ToolTipsPage extends BasePage {
@@ -15,25 +16,25 @@ class ToolTipsPage extends BasePage {
 
   async hoverOverButton() {
     await this.hoverButton.scrollIntoViewIfNeeded();
-    await this.page.waitForTimeout(300);
+    await this.hoverButton.waitFor({ state: 'visible' });
     await this.hoverButton.hover({ force: true });
   }
 
   async hoverOverTextField() {
     await this.hoverTextField.scrollIntoViewIfNeeded();
-    await this.page.waitForTimeout(300);
+    await this.hoverTextField.waitFor({ state: 'visible', timeout: 5000 });
     await this.hoverTextField.hover({ force: true });
   }
 
   async hoverOverContraryLink() {
     await this.contraryLink.scrollIntoViewIfNeeded();
-    await this.page.waitForTimeout(300);
+    await this.contraryLink.waitFor({ state: 'visible' });
     await this.contraryLink.hover({ force: true });
   }
 
   async hoverOverSectionLink() {
     await this.sectionLink.scrollIntoViewIfNeeded();
-    await this.page.waitForTimeout(300);
+    await this.sectionLink.waitFor({ state: 'visible' });
     await this.sectionLink.hover({ force: true });
   }
 

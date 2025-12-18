@@ -38,6 +38,21 @@ class FormPage extends BasePage {
     this.modalTitle = page.locator('#example-modal-sizes-title-lg');
     this.modalTable = page.locator('.table');
     this.closeModalButton = page.locator('#closeLargeModal');
+
+    // Date picker selectors
+    this.datePickerYearSelect = page.locator('.react-datepicker__year-select');
+    this.datePickerMonthSelect = page.locator('.react-datepicker__month-select');
+    this.datePickerDay = day =>
+      page
+        .locator(
+          `.react-datepicker__day--0${day.toString().padStart(2, '0')}:not(.react-datepicker__day--outside-month)`,
+        )
+        .first()
+        .click();
+
+    // Locations
+    this.stateLocator = state => this.page.locator(`div[id^="react-select-3-option"]:has-text("${state}")`).click();
+    this.cityLocator = city => this.page.locator(`div[id^="react-select-4-option"]:has-text("${city}")`).click();
   }
 
   async fillFirstName(firstName) {
@@ -67,13 +82,10 @@ class FormPage extends BasePage {
 
   async fillDateOfBirth(date) {
     await this.dateOfBirthInput.click();
-    await this.page.locator('.react-datepicker__year-select').selectOption(date.year);
-    await this.page.locator('.react-datepicker__month-select').selectOption(date.month);
+    await this.datePickerYearSelect.selectOption(date.year);
+    await this.datePickerMonthSelect.selectOption(date.month);
     await this.page.waitForTimeout(300);
-    const daySelector = `.react-datepicker__day--0${date.day
-      .toString()
-      .padStart(2, '0')}:not(.react-datepicker__day--outside-month)`;
-    await this.page.locator(daySelector).first().click();
+    this.datePickerDay(date.day);
   }
 
   async fillSubjects(subjects) {
@@ -106,40 +118,17 @@ class FormPage extends BasePage {
 
   async selectState(state) {
     await this.stateDropdown.click();
-    await this.page.locator(`div[id^="react-select-3-option"]:has-text("${state}")`).click();
+    await this.stateLocator(state);
   }
 
   async selectCity(city) {
     await this.cityDropdown.click();
-    await this.page.locator(`div[id^="react-select-4-option"]:has-text("${city}")`).click();
+    await this.cityLocator(city);
   }
 
   async submitForm() {
     await this.submitButton.scrollIntoViewIfNeeded();
     await this.submitButton.click();
-  }
-
-  async fillCompleteForm(formData) {
-    await this.fillFirstName(formData.firstName);
-    await this.fillLastName(formData.lastName);
-    await this.fillEmail(formData.email);
-    await this.selectGender(formData.gender);
-    await this.fillMobile(formData.mobile);
-    await this.fillDateOfBirth(formData.dateOfBirth);
-    await this.fillSubjects(formData.subjects);
-    await this.selectHobbies(formData.hobbies);
-    if (formData.picture) {
-      await this.uploadPicture(formData.picture);
-    }
-    await this.fillCurrentAddress(formData.currentAddress);
-    if (formData.state && formData.city) {
-      try {
-        await this.selectState(formData.state);
-        await this.selectCity(formData.city);
-      } catch (e) {
-        console.log('Skipping state/city selection due to potential modal blocking');
-      }
-    }
   }
 
   async verifyModalAppears() {
