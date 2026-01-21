@@ -9,7 +9,7 @@ test.describe.serial('API Tests - Authentication @api', () => {
   let userID = '';
   let token = '';
 
-  test('Scenario 1: Should successfully create a new user via API @api-create-user', async ({ request }) => {
+  test('Should successfully create a new user via API @api-create-user', async ({ request }) => {
     const response = await request.post(`${baseURL}/Account/v1/User`, {
       data: { userName, password },
     });
@@ -20,9 +20,7 @@ test.describe.serial('API Tests - Authentication @api', () => {
     userID = responseBody.userID;
   });
 
-  test('Scenario 2: Should successfully generate a token for authentication via API @api-generate-token', async ({
-    request,
-  }) => {
+  test('Should successfully generate a token for authentication via API @api-generate-token', async ({ request }) => {
     const response = await request.post(`${baseURL}/Account/v1/GenerateToken`, {
       data: { userName, password },
     });
@@ -79,9 +77,7 @@ test.describe.serial('API Tests - Authentication @api', () => {
     expect(responseBody).toHaveProperty('username', userName);
   });
 
-  test('Scenario 4: Should authenticate and verify user via authorized endpoint @api-authorized', async ({
-    request,
-  }) => {
+  test('Should authenticate and verify user via authorized endpoint @api-authorized', async ({ request }) => {
     const response = await request.post(`${baseURL}/Account/v1/Authorized`, {
       data: { userName, password },
     });
